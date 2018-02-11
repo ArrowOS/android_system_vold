@@ -148,6 +148,9 @@ cc_library_static {
                 shared_libs: ["libcryptfs_hw"],
             },
         },
+        device_support_hwfde_perf: {
+            cflags: ["-DCONFIG_HW_DISK_ENCRYPT_PERF"],
+        },
     },
 }
 
