@@ -151,6 +151,9 @@ cc_library_static {
                 cflags: ["-DCONFIG_HW_DISK_ENCRYPT_PERF"],
             },
         },
+        device_support_hwfde_perf: {
+            cflags: ["-DCONFIG_HW_DISK_ENCRYPT_PERF"],
+        },
     },
 }
 
