@@ -141,6 +141,16 @@ cc_library_static {
                 "libarcobbvolume",
             ],
         },
+        arrow: {
+            device_support_hwfde: {
+                cflags: ["-DCONFIG_HW_DISK_ENCRYPTION"],
+                header_libs: ["libcryptfs_hw_headers"],
+                shared_libs: ["libcryptfs_hw"],
+            },
+            device_support_hwfde_perf: {
+                cflags: ["-DCONFIG_HW_DISK_ENCRYPT_PERF"],
+            },
+        },
     },
 }
 
@@ -160,6 +170,14 @@ cc_binary {
                 "libarcobbvolume",
             ],
         },
+<<<<<<< HEAD
+=======
+        lineage: {
+            device_support_hwfde: {
+                shared_libs: ["libcryptfs_hw"],
+            },
+        },
+>>>>>>> fc83dd6... vold: Move QCOM HW FDE inclusion under lineage namespace
     },
     init_rc: [
         "vold.rc",
