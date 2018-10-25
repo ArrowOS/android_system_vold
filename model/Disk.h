@@ -43,7 +43,6 @@ public:
     enum {
         kMajorBlockLoop = 7,
         kMajorBlockScsiA = 8,
-        kMajorBlockCdrom = 11,
         kMajorBlockScsiB = 65,
         kMajorBlockScsiC = 66,
         kMajorBlockScsiD = 67,
@@ -78,8 +77,6 @@ public:
         kEmmc = 1 << 4,
         /* Flag that disk is non-removable */
         kNonRemovable = 1 << 5,
-        /* Flag that disk is CDROM */
-        kCdrom = 1 << 6,
     };
 
     const std::string& getId() { return mId; }

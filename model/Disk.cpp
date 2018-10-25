@@ -234,9 +234,6 @@ status_t Disk::readMetadata() {
         mLabel = "Virtual";
         break;
     }
-    case kMajorBlockCdrom:
-        LOG(DEBUG) << "Found a CDROM: " << mSysPath;
-        // fall through
     case kMajorBlockScsiA: case kMajorBlockScsiB: case kMajorBlockScsiC: case kMajorBlockScsiD:
     case kMajorBlockScsiE: case kMajorBlockScsiF: case kMajorBlockScsiG: case kMajorBlockScsiH:
     case kMajorBlockScsiI: case kMajorBlockScsiJ: case kMajorBlockScsiK: case kMajorBlockScsiL:
@@ -316,18 +313,9 @@ status_t Disk::readPartitions() {
     cmd.push_back(mDevPath);
 
     std::vector<std::string> output;
-    status_t res = maxMinors ? ForkExecvp(cmd, output) : ENODEV;
+    status_t res = ForkExecvp(cmd, output);
     if (res != OK) {
         LOG(WARNING) << "sgdisk failed to scan " << mDevPath;
-
-        std::string fsType, unused;
-        if (ReadMetadataUntrusted(mDevPath, &fsType, &unused, &unused) == OK) {
-            if (fsType == "iso9660" || fsType == "udf") {
-                LOG(INFO) << "Detected " << fsType;
-                createPublicVolume(mDevice);
-                res = OK;
-            }
-        }
 
         auto listener = VolumeManager::Instance()->getListener();
         if (listener) listener->onDiskScanned(getId());
@@ -373,7 +361,6 @@ status_t Disk::readPartitions() {
                 }
 
                 switch (type) {
-                    case 0x00:  // ISO9660
                     case 0x06:  // FAT16
                     case 0x07:  // HPFS/NTFS/exFAT
                     case 0x0b:  // W95 FAT32 (LBA)
@@ -604,9 +591,6 @@ int Disk::getMaxMinors() {
     case kMajorBlockScsiM: case kMajorBlockScsiN: case kMajorBlockScsiO: case kMajorBlockScsiP: {
         // Per Documentation/devices.txt this is static
         return 15;
-    }
-    case kMajorBlockCdrom: {
-        return 0;
     }
     case kMajorBlockMmc: {
         // Per Documentation/devices.txt this is dynamic
